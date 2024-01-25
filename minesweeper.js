@@ -119,9 +119,53 @@ document.addEventListener('DOMContentLoaded', () => {
     // Reveal a specific cell
     function revealCell(cellIndex) {
         const cell = document.getElementById(`cell-${cellIndex}`);
+        if (cell.classList.contains('revealed') || cell.classList.contains('flagged')) {
+            return;
+        }
         cell.classList.add('revealed');
-        cell.style.backgroundColor = 'darkgrey';
+        const minesCount = countNearbyMines(cellIndex);
+        if (minesCount > 0) {
+            cell.textContent = minesCount;
+            cell.style.backgroundColor = 'darkgrey';
+        } else {
+            cell.style.backgroundColor = 'darkgrey';
+            revealAdjacentCells(cellIndex);
+        }
         revealedCellsCount++;
+    }
+
+    function countNearbyMines(cellIndex) {
+        let count = 0;
+        const row = Math.floor(cellIndex / gridSize);
+        const col = cellIndex % gridSize;
+        for (let i = -1; i <= 1; i++) {
+            for (let j = -1; j <= 1; j++) {
+                const newRow = row + i;
+                const newCol = col + j;
+                if (newRow >= 0 && newRow < gridSize && newCol >= 0 && newCol < gridSize) {
+                    const newCellIndex = newRow * gridSize + newCol;
+                    if (minePositions.has(newCellIndex)) {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
+    function revealAdjacentCells(cellIndex) {
+        const row = Math.floor(cellIndex / gridSize);
+        const col = cellIndex % gridSize;
+        for (let i = -1; i <= 1; i++) {
+            for (let j = -1; j <= 1; j++) {
+                const newRow = row + i;
+                const newCol = col + j;
+                if (newRow >= 0 && newRow < gridSize && newCol >= 0 && newCol < gridSize) {
+                    const newCellIndex = newRow * gridSize + newCol;
+                    revealCell(newCellIndex);
+                }
+            }
+        }
     }
 
     createGrid();
