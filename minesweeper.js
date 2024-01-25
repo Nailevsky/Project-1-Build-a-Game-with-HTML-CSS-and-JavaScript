@@ -1,7 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     // Create and append the game title
     document.title = 'Minesweeper';
+
+    // Create start button earlier than the grid
+    const startButton = document.createElement('button');
+    startButton.textContent = 'Start Game';
+    document.body.append(startButton);
 
     // Create a grid for the Minesweeper game and append it to the document body
     const grid = document.createElement('div');
@@ -9,7 +14,19 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.append(grid);
 
     let gridSize = 10; // 10x10 grid
-    
+
+    startButton.addEventListener('click', () => {
+        grid.innerHTML = ''; // Clear the grid
+        minePositions.clear();
+        // Remove Game Over message
+        const gameOverMessage = document.getElementById('game-over-message');
+        if (gameOverMessage) {
+            gameOverMessage.remove();
+        }
+        createGrid();
+        placeMines();
+    });
+   
     // Initialize the grid
     function createGrid() {
         grid.style.display = 'grid';
@@ -45,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let minePositions = new Set();
     let revealedCellsCount = 0;
 
-
     // Plant mines randomly
     function placeMines() {
         while (minePositions.size < mineCount) {
@@ -63,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (minePositions.has(cellIndex)) {
             revealMines(); // Reveal all mines if a mine is clicked
-            alert('Game Over!');
+            displayGameOver(); // Game Over appears
         } else {
             revealCell(cellIndex); // Reveal the clicked cell
         }
@@ -89,6 +105,16 @@ document.addEventListener('DOMContentLoaded', () => {
             mineCell.style.backgroundColor = 'red';
         });
     }
+
+    // Game Over display function
+    function displayGameOver() {
+        const gameOverMessage = document.createElement('div');
+        gameOverMessage.id = 'game-over-message';
+        gameOverMessage.textContent = 'Game Over';
+        gameOverMessage.style.color = 'red';
+        gameOverMessage.style.fontSize = '17px';
+        document.body.append(gameOverMessage);
+    };
 
     // Reveal a specific cell
     function revealCell(cellIndex) {
