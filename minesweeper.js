@@ -8,13 +8,19 @@ document.addEventListener('DOMContentLoaded', () => {
     startButton.textContent = 'Start Game';
     document.body.append(startButton);
 
+    // Create timer and append it to the document body
+    const timerDisplay = document.createElement('div');
+    timerDisplay.id = 'timer';
+    timerDisplay.textContent = 'Time: 0s';
+    document.body.append(timerDisplay);
+
     // Create a grid for the Minesweeper game and append it to the document body
     const grid = document.createElement('div');
     grid.id = 'minesweeper-grid';
     document.body.append(grid);
 
     let gridSize = 10; // 10x10 grid
-
+   
     startButton.addEventListener('click', () => {
         grid.innerHTML = ''; // Clear the grid
         minePositions.clear();
@@ -23,9 +29,24 @@ document.addEventListener('DOMContentLoaded', () => {
         if (gameOverMessage) {
             gameOverMessage.remove();
         }
+        resetTimer();
+        startTimer();
         createGrid();
         placeMines();
     });
+
+    function startTimer() {
+        timer = setInterval(() => {
+            timeElapsed++;
+            timerDisplay.textContent = `Time: ${timeElapsed}s`;
+        }, 1000);
+    }
+
+    function resetTimer() {
+        clearInterval(timer);
+        timeElapsed = 0;
+        timerDisplay.textContent = 'Time: 0s';
+    }
    
     // Initialize the grid
     function createGrid() {
@@ -108,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Game Over display function
     function displayGameOver() {
+        clearInterval(timer);
         const gameOverMessage = document.createElement('div');
         gameOverMessage.id = 'game-over-message';
         gameOverMessage.textContent = 'Game Over';
