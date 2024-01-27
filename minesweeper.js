@@ -18,10 +18,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const grid = document.createElement('div');
     grid.id = 'minesweeper-grid';
     document.body.append(grid);
+    
+    // Create a dropdown for level selection
+    const levelSelect = document.createElement('select');
+    const levels = {
+        'Easy': 10,
+        'Medium': 20,
+        'Hard': 30
+    };
+
+    // Populate the dropdown with options and set 'Easy' as the default selected level
+    Object.keys(levels).forEach(level => {
+        const option = document.createElement('option');
+        option.value = levels[level];
+        option.textContent = level;
+        if (level === 'Easy') {
+            option.selected = true;
+        }
+        levelSelect.append(option);
+    });
+    document.body.append(levelSelect);
 
     let gridSize = 10; // 10x10 grid
    
     startButton.addEventListener('click', () => {
+        mineCount = parseInt(levelSelect.value);
         grid.innerHTML = ''; // Clear the grid
         minePositions.clear();
         revealedCellsCount = 0
@@ -85,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cell.style.cursor = 'pointer';
     }
 
-    let mineCount = 20;
+    let mineCount = levels['Easy'];
     let minePositions = new Set();
     let revealedCellsCount = 0;
 
