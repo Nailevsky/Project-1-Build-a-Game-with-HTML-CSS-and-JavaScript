@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Create start button earlier than the grid
     const startButton = document.createElement('button');
-    startButton.textContent = 'Start Game';
+    startButton.textContent = '';
     document.body.append(startButton);
 
     // Create timer and append it to the document body
