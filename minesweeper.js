@@ -24,10 +24,16 @@ document.addEventListener('DOMContentLoaded', () => {
     startButton.addEventListener('click', () => {
         grid.innerHTML = ''; // Clear the grid
         minePositions.clear();
+        revealedCellsCount = 0
         // Remove Game Over message
         const gameOverMessage = document.getElementById('game-over-message');
         if (gameOverMessage) {
             gameOverMessage.remove();
+        }
+        // Remove Win message
+        const winMessage = document.getElementById('win-message');
+        if (winMessage) {
+            winMessage.remove();
         }
         resetTimer();
         startTimer();
@@ -154,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
             revealAdjacentCells(cellIndex);
         }
         revealedCellsCount++;
+        checkWinCondition() // Check if the player has won 
     }
 
     function countNearbyMines(cellIndex) {
@@ -187,6 +194,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     revealCell(newCellIndex);
                 }
             }
+        }
+    }
+
+    function displayWinMessage() {
+        clearInterval(timer);
+        const winMessage = document.createElement('div');
+        winMessage.id = 'win-message';
+        winMessage.textContent = 'Congratulations, you won!';
+        winMessage.style.color = 'green';
+        winMessage.style.fontSize = '17px';
+        document.body.append(winMessage);
+    }
+
+    function checkWinCondition() {
+        if (revealedCellsCount + mineCount === gridSize * gridSize) {
+            displayWinMessage();
         }
     }
 
